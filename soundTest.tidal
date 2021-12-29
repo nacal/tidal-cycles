@@ -1,2 +1,7 @@
-d1 $ sound "bd sn"
+d1 $ sound "bd sd:1"
+
+d2 $ sound "hh hh hh hh"
+
+d3 $ sound "arpy"
+
 hush
