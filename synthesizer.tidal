@@ -1,0 +1,117 @@
+-- https://yoppa.org/mit-sound20/11772.html
+
+-- シンプルにシンセを鳴らしてみる
+d1 $s "supersaw*4"
+hush
+
+-- シンセの種類
+-- supermandolin, supergong, superpiano, superhex, superkick, super808,
+-- superhat, supersnare, superclap, supersiren, supersquare, supersaw,
+-- superpwm, supercomparator, superchip, supernoise, superfork,
+-- superhammond, supervibe, superhoover, superzow, superstatic,
+-- supergrind, superprimes, superwavemechanics, supertron, superreese
+
+-- 音階を弾く
+d1 $s "superpiano*4" #n "0 4 5 7"
+
+-- ランダムな音階
+d1 $s "superpiano*8" #n (irand 12)
+
+-- 短かい持続
+d1 $s "supersaw*8" #sustain "0.05" #n (irand 12)
+
+-- 短かい持続と長い持続
+d1 $s "supersaw*8" #sustain "{0.05 0.2}%8" #n (irand 12)
+
+-- メロディーを生成してみる
+d1 $s "supersaw(11, 16)" #sustain "{0.1 0.3}%4" #n "{0 4 5 7 9 12}%11" |-|n 12 |+|n "[0, 7, 12]"
+
+-- メロディーを生成+変形
+d1 $jux (iter 16) $s "supersaw(11, 16)" #sustain "{0.1 0.3}%4" #n "{0 4 5 7 9 12}%11" |-|n 12 |+|n "[0, 7, 12]"
+hush
+
+-- メロディーを生成+変形+エフェクト
+d1 $jux (iter 16) $s "supersaw(11, 16)" #sustain "{0.1 0.3}%4" #n "{0 4 5 7 9 12}%11" |-|n 12 |+|n "[0, 7, 12]" #lpf(range 100 12000 $rand) #resonance "0.2" #delay "0.5" #delaytime "0.25" #delayfeedback "0.7"
+
+-- コード(C Major)
+setcps (60/60/4)
+d1 $s "superpiano*4" #n "f6'major c6'major g6'major a6'minor"
+d1 $s "superhex*8" #n "c4'major g4'major a4'minor e4'minor f4'major c4'major f4'major g4'major"
+hush
+
+d2 $s "808oh*8"
+
+d3 $s "808bd*4"
+
+-- コードネーム一覧
+-- major maj minor min aug dim major7 maj7 dom7 minor7 min7
+-- dim7 one 1 five 5 plus sharp5 msharp5 sus2 sus4 six 6 m6
+-- sevenSus2 7sus2 sevenSus4 7sus4 sevenFlat5 7f5 m7flat5
+-- m7f5 sevenSharp5 7s5 m7sharp5 m7s5 nine m9 m7sharp9
+-- m7s9 maj9 nineSus4 ninesus4 9sus4 sixby9 6by9 m6by9
+-- sevenFlat9 7f9 m7flat9 m7f9 sevenFlat10 7f10 nineSharp5 9s5
+-- m9sharp5 m9s5 sevenSharp5flat9 7s5f9 m7sharp5flat9 eleven
+-- 11 m11 maj11 elevenSharp 11s m11sharp m11s thirteen 13 m13
+
+
+-- コード(C Major, G Minor 7)
+d1  $s "supersaw*4" #n "c5'maj g5'min7 c6'maj g5'min7"
+
+-- コードネームをいろいろ変化させてみる!
+d1 $jux (iter 16) $s "supersaw(11, 16)" #n "{c5'maj7 c5'sus4 a4'min7 c5'sus2}%3" |+| n "[0, 12]" #sustain "0.2 0.08" #pan (rand) #lpf (range 100 8000 $rand) #resonance "0.3"
+
+-- コードネームを変数で指定
+do
+  let chord = "c4'sus4"
+  d1
+    $jux (iter 16)
+    $s "supersaw(11, 16)"
+    #n chord
+    |+| n "[0, 12]"
+    #sustain "0.2 0.08"
+    #pan (rand)
+    #lpf (range 100 8000 $rand)
+    #resonance "0.3"
+
+-- スケール基本 (旋律)
+d1 $ s "supersaw(16, 16)" # n (scale "ionian" "[0 1 2 3 4 5 6 7]*2") # sustain "0.15"
+hush
+
+-- スケール一覧
+-- minPent majPent ritusen egyptian kumai hirajoshi iwato
+-- chinese indian pelog prometheus scriabin gong shang
+-- jiao zhi yu whole augmented augmented2 hexMajor7
+-- hexDorian hexPhrygian hexSus hexMajor6 hexAeolian major
+-- ionian dorian phrygian lydian mixolydian aeolian minor locrian
+-- harmonicMinor harmonicMajor melodicMinor melodicMinorDesc
+-- melodicMajor bartok hindu todi purvi marva bhairav ahirbhairav
+-- superLocrian romanianMinor hungarianMinor neapolitanMinor
+-- enigmatic spanish leadingWhole lydianMinor neapolitanMajor
+-- locrianMajor diminished diminished2 chromatic
+
+-- スケールの変化とエフェクト
+d1
+  $jux (iter 16)
+  $ s "supersaw(14, 16)"
+  # sustain "0.05 0.3"
+  # note (scale "iwato" "{0 .. 7}%9")
+  |+| note "[-12, 7, 0]"
+  #pan (rand)
+  # lpf (range 100 4000 $rand)
+  # resonance "0.3"
+  # delay "0.7" #delaytime "0.25"
+
+-- スケールを変数で指定
+do
+  let sc = "yu"
+  d1
+    $jux (iter 16)
+    $ s "supersaw(14, 16)"
+    # sustain "0.05 0.3"
+    # note ((scale sc "{0 .. 7}%9"))
+    |+| note "[-12, 7, 0]"
+    |+| note "[-12, 0]"
+    #pan (rand)
+    # lpf (range 100 4000 $rand)
+    # resonance "0.3"
+    # delay "0.7" #delaytime "0.25"
